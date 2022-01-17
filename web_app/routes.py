@@ -1,3 +1,4 @@
+from importlib.resources import path
 from wsgiref.util import request_uri
 from web_app import app
 from flask import render_template, flash, request, redirect, url_for, send_from_directory
@@ -42,15 +43,28 @@ def upload_image():
     else:
         return render_template('home.html')
 
-#@app.route('/uploads/<name>')
-#def download_file(filename):
-#    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
-@app.route('/display/<filename>')
-def display_image(filename):
+@app.route('/display_static/<filename>')
+def display_image_uploads(filename):
 	#print('display_image filename: ' + filename)
 	return redirect(url_for('static', filename='uploads/' + filename), code=301)
 
+def paths_return():
+    from os import listdir
+    from os.path import isfile, join
+    mypath = './web_app/static/database'
+    onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+    return onlyfiles
+
+@app.route('/return',methods = ['POST', 'GET'])
+def return_file():
+    images = paths_return()
+    return render_template('return.html',images=images)
+
+
+@app.route('/display_database/<filename>')
+def display_image_database(filename):
+	#print('display_image filename: ' + filename)
+	return redirect(url_for('static', filename='database/' + filename), code=301)
 
 @app.route("/about")
 def about_page():
@@ -59,3 +73,7 @@ def about_page():
 @app.errorhandler(500)
 def error500(e):
     return render_template('500.html'), 500
+
+#@app.route('/uploads/<name>')
+#def download_file(filename):
+#    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)

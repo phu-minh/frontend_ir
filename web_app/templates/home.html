@@ -21,7 +21,7 @@ Upload and display image
     </p>
     {% if filename %}
         <div class="container" id= "image" style="text-align:center;">
-            <img src="{{ url_for('display_image', filename=filename) }}">
+            <img src="{{ url_for('display_image_uploads', filename=filename) }}">
         </div>
     {% endif %}
 
